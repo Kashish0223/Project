@@ -1,5 +1,2 @@
-# app/__init__.py
-
-from .app import app
 
 web: gunicorn app:app
