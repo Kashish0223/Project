@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  {% block title %}
+      <title></title>
+  {% endblock title %}
+  <link rel="icon" type="image/x-icon" href="static/images/logo.png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base_style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='js/script.js') }}">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet">
+  
+</head>
+
+<body>
+  <header>
+    <img src="static/images/logo.png" alt="logo" width="50px" height="50px" style="float:left;margin-left:30px;">
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about">About Us</a></li>
+        <li><a href="/product">Products</a></li>
+        <li><a href="/ContentLibrary">Contact Media Library</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/logout" class="login-btn">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+  {% block main %}
+
+  <div class="index">
+    <div class="col">
+       
+
+    </div>
+  </div>
+  {% endblock main %}
+
+     <!-- Bootstrap JS and dependencies -->
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

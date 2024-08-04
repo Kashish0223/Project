@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Content Library</title>
+{% endblock title %}
+
+{% block main %}
+<div class="tab" style="background-color: #0b0b2c;">
+    <a href="#module" class="text-center">Module</a>
+    <a href="#video" class="text-center">Videos</a>
+    <a href="#courses" class="text-center">Courses</a>
+</div>
+<div class="index container-fluid mt-3 pl-3">
+    <!-- Sort and Filter Section -->
+    <div class="sort-filter-container mb-4">
+        <label for="sort-options">Sort by:</label>
+        <select id="sort-options">
+            <option value="title">Title</option>
+            <option value="date">Date Added</option>
+        </select>
+
+        <label for="filter-options">Filter by Course:</label>
+        <select id="filter-options">
+            <option value="all">All</option>
+            {% if allcourse %}
+            {% for course in allcourse %}
+            <option value="{{ course.id }}">{{ course.ctitle }}</option>
+            {% endfor %}
+            {% else %}
+            <option value="none">No courses available</option>
+            {% endif %}
+        </select>
+    </div>
+
+    <!-- Module Section -->
+    <h1 class="text-center" id="module">Our Modules</h1>
+    <div class="row">
+        {% for mod in allmodule %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 library-item">
+                <div class="card-body">
+                    {% for doc in documents %}
+                    {% if doc.course_id == mod.course_id %}
+                    <img src="{{ url_for('static', filename=doc.image_path) }}" class="card-img-top content-thumbnail"
+                        alt="{{ doc.cltitle }}" style="width:100px;height:100px;border-radius: 80px;margin-bottom:15px;"
+                        data-title="{{ mod.title }}" data-description="{{ mod.description }}">
+                    {% endif %}
+                    {% endfor %}
+                    <h5 class="card-title">{{ mod.title }}</h5>
+                    <div class="description-container">
+                        <p class="short-desc">{{ mod.description[:100] }}...</p>
+                        <p class="full-desc" style="display: none;">{{ mod.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="contentModal" class="modal">
+        <div class="modal-content" style="width: 40%;">
+            <span class="close">&times;</span>
+            <h5 id="modal-title"></h5>
+            <p id="modal-description"></p>
+        </div>
+    </div>
+
+    <!-- Video Section -->
+    <h1 class="text-center" id="video">Videos</h1>
+    <div class="row" style="padding:0px 15px;">
+        {% for video in all_video %}
+        <div class="col-md-4 mb-4">
+            <div class="video-thumbnail" data-video-id="{{ video.video_id }}">
+                <img src="{{ video.thumbnail_path }}" alt="{{ video.video_title }}" width="400px" height="320px">
+                <button class="play-button">Play Video</button>
+            </div>
+            <div class="video-container" id="video-container-{{ video.video_id }}"></div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Courses Section -->
+    <h1 class="text-center" id="courses">Courses</h1>
+    <div class="row">
+        {% for doc in documents %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 library-item">
+                <img src="{{ url_for('static', filename=doc.image_path) }}" class="card-img-top" alt="{{ doc.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ doc.cltitle }}</h5>
+                    <div class="popBox">
+                        <p class="card-text" style="display: none;">{{ doc.description }}</p>
+                    </div>
+                    <a href="{{ url_for('static', filename=doc.document_path) }}" class="btn btn-primary pulse" target="_blank">View Document</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>        
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Handle video thumbnail clicks
+        const videoThumbnails = document.querySelectorAll('.video-thumbnail');
+        videoThumbnails.forEach(thumbnail => {
+            const playButton = thumbnail.querySelector('.play-button');
+            playButton.addEventListener('click', function () {
+                const videoId = thumbnail.getAttribute('data-video-id');
+                const videoContainer = document.getElementById(`video-container-${videoId}`);
+                if (videoContainer.innerHTML === '') {
+                    const iframe = document.createElement('iframe');
+                    iframe.width = '560';
+                    iframe.height = '315';
+                    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                    iframe.frameBorder = '0';
+                    iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+                    iframe.allowFullscreen = true;
+                    videoContainer.appendChild(iframe);
+                }
+            });
+        });
+
+
+        /**************--------Add User Click Start--------**************/
+        // document.addEventListener('DOMContentLoaded', () => {
+            const thumbnails = document.querySelectorAll('.content-thumbnail');
+            const modal = document.getElementById('contentModal');
+            const modalDescription = document.getElementById('modal-description');
+            const modalTitle = document.getElementById('modal-title');
+            const span = document.getElementsByClassName('close')[0];
+
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener('click', (event) => {
+                    const description = event.currentTarget.getAttribute('data-description');
+                    const title = event.currentTarget.getAttribute('data-title');
+                    modalDescription.textContent = description;
+                    modalTitle.textContent = title;
+                    modal.style.display = 'block';
+                });
+            });
+
+            span.onclick = function () {
+                modal.style.display = 'none';
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        // });
+        /**************--------Add User Click End--------**************/
+    });
+</script>
+{% endblock main %}
