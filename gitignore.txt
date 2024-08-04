@@ -1,0 +1,17 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore local database file
+library.db
+
+# Ignore backend directory
+backend/
+
+# Ignore Project directory
+Project/
+
+# Ignore other common files
+.DS_Store
+*.log
+*.tmp
